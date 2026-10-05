@@ -1,7 +1,6 @@
 // ─── PRISM LABS AI CHAT ──────────────────────────────────────────────
 // Dual-mode chatbot: Prism Chat + ScaleIQ Advisor
 
-const CHAT_API_KEY = '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';
 const CHAT_MODEL = 'deepseek/deepseek-chat-v3-0324:free';
 
 // ─── LEARNED CONTEXT ─────────────────────────────────────────────────────────
@@ -100,7 +99,7 @@ function smartOfflineReply(userMessage) {
 async function callChatAI(userMessage) {
     chatHistory.push({ role: 'user', content: userMessage });
 
-    const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
+    const apiUrl = null; // Local-first build: AI will use the secure Vercel backend later.
     const proxies = [
         'https://edge.flowith.io/api-proxy/' + encodeURIComponent(apiUrl),
         'https://corsproxy.io/?' + encodeURIComponent(apiUrl),
@@ -119,9 +118,10 @@ async function callChatAI(userMessage) {
 
     for (const url of proxies) {
         try {
+            if (!apiUrl) throw new Error('Legacy AI module disabled in local-first build');
             const res = await fetch(url, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${CHAT_API_KEY}`, 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body,
                 signal: AbortSignal.timeout(12000)
             });

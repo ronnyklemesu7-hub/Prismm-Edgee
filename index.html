@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prismm Edge design preview">
+  <meta name="theme-color" content="#0b0b0f">
+  <title>Prismm Edge | Design Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b0b0f;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .wrap {
+      width: min(900px, 100%);
+    }
+
+    .eyebrow {
+      color: #a78bfa;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 9vw, 82px);
+      line-height: .95;
+      margin: 0 0 18px;
+      letter-spacing: -.055em;
+    }
+
+    .intro {
+      max-width: 620px;
+      color: #a1a1aa;
+      font-size: 17px;
+      line-height: 1.6;
+      margin-bottom: 38px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    a {
+      display: block;
+      padding: 24px;
+      min-height: 150px;
+      border: 1px solid #27272a;
+      border-radius: 20px;
+      background: #111116;
+      color: inherit;
+      text-decoration: none;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    a:hover {
+      transform: translateY(-4px);
+      border-color: #52525b;
+      background: #18181d;
+    }
+
+    strong {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    span {
+      color: #a1a1aa;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    footer {
+      margin-top: 32px;
+      color: #52525b;
+      font-size: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      a {
+        min-height: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      a {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="eyebrow">Prismm Edge · Client Preview</div>
+
+    <h1>The new Prismm experience.</h1>
+
+    <p class="intro">
+      A working preview of the redesigned Prismm Edge ecosystem.
+      Explore the main website, AI workspace, and digital products storefront.
+    </p>
+
+    <section class="grid">
+      <a href="./apps/main-site/">
+        <strong>Prismm Edge</strong>
+        <span>Main website experience and brand ecosystem.</span>
+      </a>
+
+      <a href="./apps/prism-labs/">
+        <strong>Prism Labs</strong>
+        <span>AI-powered tools, analysis and workspace experience.</span>
+      </a>
+
+      <a href="./apps/edge-products/">
+        <strong>Edge Products</strong>
+        <span>Digital storefront, products, search and shopping experience.</span>
+      </a>
+    </section>
+
+    <footer>UI/UX rebuild preview · September 2026</footer>
+  </main>
+</body>
+</html>

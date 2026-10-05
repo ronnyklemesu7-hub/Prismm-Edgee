@@ -424,7 +424,7 @@ h4,
   position: absolute;
   inset: 0;
   border: 1px solid rgba(232, 201, 122, 0.3);
-  background: url("../assets/prism-edge-logo.jpg") no-repeat center/contain;
+  background: url("../assets/prism-edge-logo.png") no-repeat center/contain;
   background-color: #050505;
   box-shadow: inset 0 0 50px rgba(232, 201, 122, 0.08);
   transition: box-shadow 0.3s;
@@ -464,3 +464,88 @@ h4,
   transform: rotateX(-90deg) translateZ(120px);
   filter: brightness(0.5);
 }
+
+/* ================================================================
+   UIUX REBUILD — PRISM LABS / PASS 03
+   Luxury consulting system: quieter motion, stronger hierarchy,
+   better reading width, deliberate CTAs, mobile-first controls.
+   ================================================================ */
+:root {
+  --pl-black: #070707;
+  --pl-panel: rgba(18,18,18,.76);
+  --pl-panel-2: rgba(26,24,20,.72);
+  --pl-gold: #E8C97A;
+  --pl-pearl: #F5F5F0;
+  --pl-blue: #1A3EBF;
+  --pl-muted: rgba(245,245,240,.68);
+  --pl-border: rgba(232,201,122,.14);
+}
+html { background: var(--pl-black); }
+body {
+  background: radial-gradient(circle at 50% -10%, rgba(232,201,122,.10), transparent 32rem), #070707;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+body::selection { background: rgba(232,201,122,.28); color: #fff; }
+nav.glass-nav { background: rgba(7,7,7,.84); border-bottom: 1px solid var(--pl-border); box-shadow: 0 10px 40px rgba(0,0,0,.18); }
+nav.glass-nav > div { min-height: 70px; }
+nav.glass-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+section { scroll-margin-top: 82px; }
+#hero { min-height: max(720px, 92vh); padding-top: 84px; }
+#hero h1 { font-size: clamp(4rem, 11vw, 10rem); letter-spacing: -.045em; line-height: .84; }
+#hero > .relative.z-10 { width: min(100%, 1120px); }
+#hero p { max-width: 760px; margin-inline: auto; }
+#hero a, section a[class*="rounded-full"] { min-height: 48px; }
+.glass-card, .case-study-card, .template-card { background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018)); border-color: var(--pl-border); box-shadow: 0 18px 60px rgba(0,0,0,.18); }
+.glass-card:hover, .template-card:hover { transform: translateY(-4px); border-color: rgba(232,201,122,.32); }
+#about, #story, #websites, #marketing, #prisma { position: relative; }
+#about::before, #websites::before, #prisma::before { content:""; position:absolute; inset:8% 0 auto; height:1px; background:linear-gradient(90deg,transparent,rgba(232,201,122,.18),transparent); pointer-events:none; }
+section > div { width: min(100%, 1280px); }
+h2.font-serif { letter-spacing: -.025em; text-wrap: balance; }
+.template-thumb { background: #0c0c0c; }
+.msg-ai, .msg-user { box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+#chat-form input { min-width: 0; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--pl-gold); outline-offset: 3px; }
+input, textarea, select { min-height: 46px; }
+
+@media (max-width: 900px) {
+  nav.glass-nav > div { padding-inline: 18px; }
+  nav.glass-nav .hidden.md\:flex { display: none !important; }
+  #hero { min-height: 720px; }
+  #hero h1 { font-size: clamp(4rem, 15vw, 7rem); }
+  section.py-32 { padding-block: 92px; }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+  nav.glass-nav > div { min-height: 64px; padding-block: 9px; }
+  nav.glass-nav img { width: 36px !important; height: 36px !important; }
+  nav.glass-nav span.font-serif { font-size: 1.2rem; }
+  #hero { min-height: 700px; padding-inline: 18px; padding-top: 96px; }
+  #hero h1 { font-size: clamp(3.6rem, 17vw, 5.6rem); }
+  #hero .text-3xl { font-size: 1.55rem; line-height: 1.15; }
+  #hero .text-xl { font-size: 1rem; line-height: 1.65; }
+  #hero .flex.flex-col.sm\:flex-row { width: 100%; }
+  #hero .flex.flex-col.sm\:flex-row a { width: 100%; }
+  section.py-32 { padding-block: 72px; padding-inline: 18px; }
+  section .text-6xl, section .md\:text-7xl { font-size: clamp(2.7rem, 12vw, 4.3rem); line-height: .95; }
+  .glass-card { border-radius: 16px; }
+  .template-card, .case-study-card { border-radius: 14px; }
+  #chat-panel { right: 12px; left: 12px; bottom: 82px; width: auto; max-width: none; height: min(72vh, 560px); }
+  #chat-bubble { right: 14px; bottom: 16px; }
+  #chat-form { gap: 6px; }
+  #chat-form input { padding-inline: 13px; }
+  #chat-form button { min-width: 46px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+.sr-only { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
+
+
+.analysis-enter { opacity: 0; transform: translateY(18px); }
+.analysis-enter.is-visible { opacity: 1; transform: translateY(0); transition: opacity .45s ease, transform .45s ease; }
+@media (prefers-reduced-motion: reduce) { .analysis-enter, .analysis-enter.is-visible { transition: none !important; transform: none !important; opacity: 1; } }

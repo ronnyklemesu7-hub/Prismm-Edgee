@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
+    <script>window.PRISM_LOCAL_ONLY = true;</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Edge Products is a curated marketplace for products, suppliers, and brands across electronics, food services, beauty, tools, apparel, and industrial categories.">
+  <meta name="theme-color" content="#07111f">
+  <meta property="og:title" content="Edge Products — Curated Marketplace">
+  <meta property="og:description" content="Discover products and suppliers across the Prism Edge marketplace.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/prism-edge-logo.png">
   <title>Edge Products — Wholesale &amp; Retail Marketplace</title>
   <link rel="icon" type="image/jpeg" href="assets/prism-edge-logo.jpg">
   <link rel="stylesheet" href="styles.css">
@@ -38,9 +45,9 @@
 
   <!-- ================= HEADER NAVBAR ================= -->
   <header class="site-header">
-    <div class="wrap" style="max-width: 1920px; padding: 0 32px;">
+    <div class="wrap header-wrap">
       <a href="#/" class="logo" aria-label="Edge Products home" id="logo-link">
-        <img src="../main site/assets/new_logo.jpg" alt="Logo" class="mark" style="width: 24px; height: 24px; object-fit: contain;">
+        <img src="assets/new_logo.jpg" alt="Edge Products" class="mark">
         Edge<span class="accent">Products</span>
       </a>
 
@@ -63,8 +70,8 @@
 
       <!-- Navigation & Auth Links -->
       <nav class="header-links">
-        <a href="/" onclick="if(window.location.protocol==='file:'){event.preventDefault();window.location.href='../main site/index.html';}" class="muted">Prism Edge</a>
-        <a href="/labs/" onclick="if(window.location.protocol==='file:'){event.preventDefault();window.location.href='../prism labs/prism labs.html';}" class="muted">Prism Labs</a>
+        <a href="../main-site/index.html" class="muted">Prism Edge</a>
+        <a href="../prism-labs/index.html" class="muted">Prism Labs</a>
         <a href="#" class="muted" id="signin-trigger-btn">Sign In</a>
         <button class="cart-btn" id="wishlist-open-btn" aria-label="Wishlist">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
@@ -74,7 +81,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke="currentColor"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
           <span class="cart-count" id="cart-count">0</span>
         </button>
-        <a href="admin.html" onclick="event.preventDefault(); window.location.href=(window.location.protocol==='file:'?'admin.html':'/shop/admin.html');" class="sell-link">Admin Portal</a>
+        <a href="admin.html" onclick="event.preventDefault(); window.location.href='admin.html';" class="sell-link">Admin Portal</a>
         <!-- Mega Dropdown Tabs -->
         <div class="pe-mega-nav">
           <button class="pe-mega-tab">Our Story <span class="pe-chevron">▾</span></button>
@@ -82,7 +89,7 @@
             <div class="pe-mega-inner">
               <h4>Our Story</h4>
               <p>Edge Products is the marketplace arm of Prism Edge. Quality, Speed, and Edge.</p>
-              <a href="../main site/index.html#about" class="pe-mega-cta">Read More →</a>
+              <a href="../main-site/index.html#about" class="pe-mega-cta">Read More →</a>
             </div>
           </div>
         </div>
@@ -378,7 +385,7 @@
               <input type="text" id="qty-value" value="1" inputmode="numeric">
               <button id="qty-plus" aria-label="Increase quantity">+</button>
             </div>
-            <span class="muted" style="font-size:12.5px;color:var(--ink-soft)">units</span>
+            <span class="muted units-label">units</span>
           </div>
           <!-- Supplier Info Card -->
           <div class="supplier-card" id="pd-supplier-card">
@@ -429,10 +436,10 @@
   </div>
 
   <!-- ================= WISHLIST DRAWER ================= -->
-  <aside class="cart-drawer" id="wishlist-drawer" hidden style="z-index: 1000;">
+  <aside class="cart-drawer" id="wishlist-drawer" hidden>
     <div class="cart-head">
       <h3>Your Wishlist</h3>
-      <button class="close-panel" id="wishlist-close-btn" aria-label="Close wishlist" style="position:static;">&times;</button>
+      <button class="close-panel" id="wishlist-close-btn" aria-label="Close wishlist">&times;</button>
     </div>
     <div class="cart-items" id="wishlist-items">
       <!-- Injected via app.js -->
@@ -440,16 +447,16 @@
   </aside>
 
   <!-- ================= CHECKOUT MODAL ================= -->
-  <div class="modal-overlay" id="checkout-modal" hidden style="z-index: 2000;">
-    <div class="modal-content" style="max-width: 500px; width: 100%; padding: 24px;">
-      <button class="modal-close" id="checkout-modal-close" aria-label="Close" style="top: 15px; right: 15px;">&times;</button>
-      <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 700;">Complete Checkout</h3>
+  <div class="modal-overlay" id="checkout-modal" hidden>
+    <div class="modal-content checkout-content">
+      <button class="modal-close" id="checkout-modal-close" aria-label="Close">&times;</button>
+      <h3 class="checkout-title">Complete Checkout</h3>
       
       <div id="checkout-step-1">
-        <p style="margin-bottom: 16px; font-size: 14px; color: var(--ink-soft);">How would you like to receive your order?</p>
-        <div style="display:flex; gap:12px;">
-          <button class="primary" style="flex:1" id="checkout-btn-delivery">Delivery</button>
-          <button class="quote-btn" style="flex:1" id="checkout-btn-pickup">Pickup</button>
+        <p class="checkout-intro">How would you like to receive your order?</p>
+        <div class="checkout-choice-grid">
+          <button class="primary" id="checkout-btn-delivery">Delivery</button>
+          <button class="quote-btn" id="checkout-btn-pickup">Pickup</button>
         </div>
       </div>
 
@@ -460,9 +467,9 @@
           <div class="field"><label>Home Address</label><input type="text" id="co-del-address" required class="pe-input"></div>
           <div class="field">
             <label>Pin Location</label>
-            <div id="checkout-map" style="width: 100%; height: 200px; background: #eee; border-radius: 8px;"></div>
+            <div id="checkout-map" class="checkout-map"></div>
           </div>
-          <button type="submit" class="primary w-full mt-4" style="width: 100%;">Confirm Delivery Order</button>
+          <button type="submit" class="primary w-full mt-4">Confirm Delivery Order</button>
         </form>
       </div>
 
@@ -472,13 +479,13 @@
           <div class="field"><label>Email</label><input type="email" id="co-pic-email" required class="pe-input"></div>
           <div class="field">
             <label>Pickup Location</label>
-            <select required class="pe-input w-full" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border);">
+            <select required class="pe-input w-full checkout-location">
               <option value="">Select a location</option>
               <option value="hq">Prism Edge HQ (Accra)</option>
               <option value="store">Partner Store</option>
             </select>
           </div>
-          <button type="submit" class="primary w-full mt-4" style="width: 100%;">Confirm Pickup Order</button>
+          <button type="submit" class="primary w-full mt-4">Confirm Pickup Order</button>
         </form>
       </div>
     </div>
@@ -489,7 +496,7 @@
   <aside class="cart-drawer" id="cart-drawer" hidden>
     <div class="cart-head">
       <h3>Your Cart</h3>
-      <button class="close-panel" id="cart-close-btn" aria-label="Close cart" style="position:static;">&times;</button>
+      <button class="close-panel" id="cart-close-btn" aria-label="Close cart">&times;</button>
     </div>
     <div class="cart-items" id="cart-items">
       <!-- Injected via app.js -->
@@ -524,7 +531,7 @@
       <div>
         <h5>About Edge Products</h5>
         <ul>
-          <li><a href="../main site/index.html#about">Our story</a></li>
+          <li><a href="../main-site/index.html#about">Our story</a></li>
           <li><a href="mailto:prismmedge@gmail.com">Careers</a></li>
           <li><a href="help.html#trust">Trust &amp; safety</a></li>
         </ul>
@@ -557,7 +564,7 @@
   </footer>
 
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="database.js"></script>
-  <script src="app.js"></script>
+  <script src="database.js?v=5"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

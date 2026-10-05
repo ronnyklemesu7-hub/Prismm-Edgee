@@ -107,7 +107,7 @@ function bindStaticEvents() {
       e.preventDefault();
       const section = tab.dataset.section || 'home';
       if (section === 'admin') {
-        window.location.href = (window.location.protocol === 'file:' ? 'admin.html' : '/shop/admin.html');
+        window.location.href = 'admin.html';
         return;
       }
 
@@ -512,7 +512,7 @@ function bindStaticEvents() {
 
 function switchSection(section) {
   if (section === 'admin') {
-    window.location.href = (window.location.protocol === 'file:' ? 'admin.html' : '/shop/admin.html');
+    window.location.href = 'admin.html';
     return;
   }
 
@@ -916,7 +916,7 @@ function renderProductGrid() {
       </div>
       <div class="card-body">
         <div class="name" onclick="location.hash='#/product/${p.id}'" style="cursor:pointer;">${esc(p.name)}</div>
-        <div class="stars">★★★★★ <span class="count">(${p.reviews || Math.floor(Math.random() * 20) + 5})</span></div>
+        <div class="stars" aria-label="${p.reviews ? `${p.reviews} reviews` : 'No reviews yet'}">★★★★★ <span class="count">(${p.reviews || 0})</span></div>
         <div class="price">GHS ${priceVal}</div>
         <div class="moq">MOQ: ${moqVal} unit${moqVal > 1 ? 's' : ''}</div>
         <div class="card-actions">
@@ -1383,7 +1383,12 @@ function renderGrid(container, items, allowEmpty) {
         </div>
       </div>
     `;
-    card.querySelector('.add-btn').addEventListener('click', (e) => { e.stopPropagation(); addToCart(p.id, 1); });
+    card.querySelector('.add-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[CART DEBUG] Add to Cart clicked:', p.id, p.name);
+      addToCart(p.id, 1);
+    });
     const wishBtn = card.querySelector('.wishlist-btn');
     if (wishBtn) wishBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleWishlist(p.id); });
     container.appendChild(card);

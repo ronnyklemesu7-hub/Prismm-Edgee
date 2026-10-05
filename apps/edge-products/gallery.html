@@ -166,7 +166,7 @@
           <span class="hidden sm:inline">Refresh Sync</span>
         </button>
 
-        <a href="index.html" onclick="handleStoreNavigation(event)" class="px-4 py-2.5 rounded-lg bg-black/40 border border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700 transition flex items-center gap-2 text-xs font-medium">
+        <a href="index.html#/shops" class="px-4 py-2.5 rounded-lg bg-black/40 border border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700 transition flex items-center gap-2 text-xs font-medium">
           <i data-lucide="shopping-bag" class="w-4 h-4 text-gold-400"></i>
           <span>Storefront</span>
         </a>
@@ -273,7 +273,6 @@
 
   <!-- ================= LOGIC SCRIPT ================= -->
   <script>
-    let API_BASE = '/api/data';
     const DB_NAME = 'prism_edge_db';
     const DB_VERSION = 2;
 
@@ -308,12 +307,12 @@
 
     function handleStoreNavigation(e) {
       if (e) e.preventDefault();
-      window.location.href = (window.location.protocol === 'file:') ? 'index.html' : '/shop/';
+      window.location.href = (window.location.protocol === 'file:') ? 'index.html' : 'index.html#/shops';
     }
 
     function handleAdminNavigation(e) {
       if (e) e.preventDefault();
-      window.location.href = (window.location.protocol === 'file:') ? 'admin.html' : '/shop/admin.html';
+      window.location.href = 'admin.html';
     }
 
     function extractImageUrl(item) {
@@ -325,32 +324,12 @@
     }
 
     async function fetchCollectionData(storeName) {
-      let serverData = [];
-      // 1. Try Server API to fetch latest
       try {
-        const ts = Date.now();
-        let res = await fetch(`${API_BASE}/${storeName}?_t=${ts}`).catch(() => null);
-        if (!res || !res.ok) {
-          res = await fetch(`http://localhost:8000/api/data/${storeName}?_t=${ts}`).catch(() => null);
+        if (typeof window.getAllItems === 'function') {
+          return await window.getAllItems(storeName) || [];
         }
-        if (res && res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) serverData = data;
-        }
-      } catch (_) {}
-
-      if (serverData.length > 0) return serverData;
-
-      // 2. Try IndexedDB (Primary truth)
-      const idbData = await idbGetAll(storeName);
-      if (idbData && idbData.length > 0) return idbData;
-
-      // 3. Try localStorage (Fallback for small data)
-      if (storeName !== 'products' && storeName !== 'storefrontMedia') {
-        try {
-          const stored = localStorage.getItem(storeName);
-          if (stored) return JSON.parse(stored) || [];
-        } catch (_) {}
+      } catch (error) {
+        console.warn('[Gallery] Local data unavailable:', error);
       }
 
       return [];

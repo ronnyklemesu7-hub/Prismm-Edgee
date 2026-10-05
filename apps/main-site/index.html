@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Prism Edge builds digital brands, websites, marketing systems, and growth platforms designed to break through and scale.">
+<meta name="theme-color" content="#0A0A0F">
+<meta property="og:title" content="PRISM EDGE — Where Brands Break Through">
+<meta property="og:description" content="Creative and technical growth systems for ambitious brands.">
+<meta property="og:type" content="website">
+<title>PRISM EDGE — Where Brands Break Through</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="styles.css">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          midnight: '#0A0A0F',
+          violet: '#7C3AED',
+          cyan: '#00D4FF',
+          sharp: '#F8F8FF',
+        },
+        fontFamily: {
+          display: ['Space Grotesk', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-midnight text-sharp font-body overflow-x-hidden">
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<div class="aurora-wrap">
+  <div class="aurora aurora-1"></div>
+  <div class="aurora aurora-2"></div>
+  <div class="aurora aurora-3"></div>
+  <canvas id="prism-canvas"></canvas>
+  <div class="noise"></div>
+</div>
+
+<nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between glass-nav">
+    <a href="#home" class="flex items-center gap-2 group">
+      <div class="prism-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 3 L25 22 L3 22 Z" stroke="url(#logoGrad)" stroke-width="1.8" fill="none"/>
+          <path d="M14 3 L14 22" stroke="url(#logoGrad)" stroke-width="1" opacity="0.5"/>
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28">
+              <stop offset="0%" stop-color="#7C3AED"/>
+              <stop offset="50%" stop-color="#00D4FF"/>
+              <stop offset="100%" stop-color="#F8F8FF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="font-display font-bold text-lg tracking-tight">PRISM<span class="text-violet">EDGE</span></span>
+    </a>
+
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#about" class="nav-link">About</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#media" class="nav-link">Media</a>
+      <a href="https://prismlabs.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../prism-labs/index.html';}" class="nav-link flex items-center gap-2">
+        PRISM LABS
+        <span class="badge-purple">Our Lab</span>
+      </a>
+      <a href="https://edgeproducts.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../edge-products/index.html';}" class="nav-link flex items-center gap-2">
+        EDGE PRODUCTS
+        <span class="badge-cyan">Shop</span>
+      </a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="#contact" class="hidden md:inline-flex btn-primary">Get Started</a>
+      <button id="menu-toggle" class="lg:hidden p-2" aria-label="Menu">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div id="mobile-menu" class="fixed inset-0 z-50 bg-midnight/98 backdrop-blur-xl hidden flex-col items-center justify-center">
+  <button id="menu-close" class="absolute top-6 right-6 p-2" aria-label="Close">
+    <i data-lucide="x" class="w-8 h-8"></i>
+  </button>
+  <div class="flex flex-col items-center gap-6 text-2xl font-display">
+    <a href="#home" class="mobile-link">Home</a>
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#services" class="mobile-link">Services</a>
+    <a href="#media" class="mobile-link">Media</a>
+    <a href="https://prismlabs.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../prism-labs/index.html';}" class="mobile-link flex items-center gap-2">PRISM LABS <span class="badge-purple">Our Lab</span></a>
+    <a href="https://edgeproducts.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../edge-products/index.html';}" class="mobile-link flex items-center gap-2">EDGE PRODUCTS <span class="badge-cyan">Shop</span></a>
+    <a href="#contact" class="mobile-link">Contact</a>
+    <a href="#contact" class="btn-primary mt-4">Get Started</a>
+  </div>
+</div>
+
+<section id="home" class="relative min-h-screen flex items-center justify-center px-6 pt-24">
+  <div class="text-center max-w-5xl relative z-10">
+    <div class="inline-flex items-center gap-2 font-mono text-sm text-cyan mb-6 reveal">
+      <span>The Future of Brand Growth</span>
+      <span class="blink">_</span>
+    </div>
+    <h1 class="font-display font-bold leading-[0.95] tracking-tight mb-8">
+      <span class="block text-6xl md:text-8xl reveal">We Scale Brands.</span>
+      <span class="block text-6xl md:text-8xl gradient-text reveal" style="animation-delay: 0.2s">We Build Futures.</span>
+    </h1>
+    <p class="text-lg md:text-xl text-sharp/70 max-w-2xl mx-auto mb-10 reveal" style="animation-delay: 0.4s">
+      Prism Edge is the creative and technical powerhouse helping businesses break through the noise — with world-class websites, strategy, and brand systems.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal" style="animation-delay: 0.6s">
+      <a href="https://prismlabs.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../prism-labs/index.html';}" class="btn-primary">
+        Explore Prism Labs
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+      <a href="#media" class="btn-outline">See Our Work</a>
+    </div>
+  </div>
+
+  <a href="#services" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-sharp/50 animate-bounce">
+    <i data-lucide="chevron-down" class="w-8 h-8"></i>
+  </a>
+</section>
+
+<section id="services" class="py-32 px-6 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="font-mono text-sm text-cyan mb-3">// SERVICES</div>
+      <h2 class="font-display text-5xl md:text-6xl font-bold mb-4">What Prism Edge Does</h2>
+      <p class="text-sharp/60 text-lg">We are not just an agency. We are your growth engine.</p>
+    </div>
+    <div id="services-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+</section>
+
+<section id="about" class="py-32 px-6 relative">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+    <div>
+      <div class="font-mono text-sm text-cyan mb-3">// ABOUT</div>
+      <h2 class="font-display text-5xl md:text-6xl font-bold mb-6">Built to Break <span class="gradient-text">Boundaries</span></h2>
+      <p class="text-sharp/70 text-lg leading-relaxed mb-8">
+        Prism Edge is a full-service brand growth company. We partner with businesses that are ready to scale — combining creative excellence with technical precision. Our team operates across two key platforms: <strong class="text-violet">Prism Labs</strong>, our brand scaling lab, and <strong class="text-cyan">Edge Products</strong>, our product and e-commerce division. Together, they form an ecosystem built for growth.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6" id="stats-row">
+        <div class="stat"><div class="stat-num" data-target="100">0</div><div class="stat-label">Brands Served</div></div>
+        <div class="stat"><div class="stat-num" data-target="3">0</div><div class="stat-label">Countries</div></div>
+        <div class="stat"><div class="stat-num" data-target="2">0</div><div class="stat-label">Platforms</div></div>
+        <div class="stat"><div class="stat-num">1</div><div class="stat-label">Mission: Your Growth</div></div>
+      </div>
+    </div>
+    <div class="relative h-[500px] flex items-center justify-center">
+      <div class="about-prism">
+        <div class="face f1"></div>
+        <div class="face f2"></div>
+        <div class="face f3"></div>
+        <div class="face f4"></div>
+      </div>
+      <div class="absolute inset-0 bg-gradient-radial from-violet/20 via-transparent to-transparent"></div>
+    </div>
+  </div>
+</section>
+
+<section id="ecosystem" class="py-32 px-6 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="font-mono text-sm text-cyan mb-3">// ECOSYSTEM</div>
+      <h2 class="font-display text-5xl md:text-6xl font-bold">Our Ecosystem</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <a href="https://prismlabs.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../prism-labs/index.html';}" class="eco-card eco-purple group">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="eco-icon bg-violet/20"><i data-lucide="flask-conical" class="w-6 h-6 text-violet"></i></div>
+          <span class="badge-purple">Our Lab</span>
+        </div>
+        <h3 class="font-display text-4xl font-bold mb-2">Prism Labs</h3>
+        <p class="text-violet font-mono text-sm mb-4">The Brand Scaling Engine</p>
+        <p class="text-sharp/70 mb-8">Where we research, build, and deploy growth strategies for brands. Visit Prism Labs to start scaling your business today.</p>
+        <div class="inline-flex items-center gap-2 text-violet font-semibold group-hover:gap-4 transition-all">
+          Enter Prism Labs <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </div>
+      </a>
+      <a href="https://edgeproducts.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../edge-products/index.html';}" class="eco-card eco-cyan group">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="eco-icon bg-cyan/20"><i data-lucide="zap" class="w-6 h-6 text-cyan"></i></div>
+          <span class="badge-cyan">Shop</span>
+        </div>
+        <h3 class="font-display text-4xl font-bold mb-2">Edge Products</h3>
+        <p class="text-cyan font-mono text-sm mb-4">Products That Move</p>
+        <p class="text-sharp/70 mb-8">Browse and discover products curated and powered by the Prism Edge network. Quality. Speed. Edge.</p>
+        <div class="inline-flex items-center gap-2 text-cyan font-semibold group-hover:gap-4 transition-all">
+          Visit Edge Products <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="media" class="py-32 px-6 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="font-mono text-sm text-cyan mb-3">// GALLERY</div>
+      <h2 class="font-display text-5xl md:text-6xl font-bold mb-4">Prism Edge in Action</h2>
+      <p class="text-sharp/60 text-lg">Our work, our world, our edge.</p>
+    </div>
+    <div id="gallery-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </div>
+</section>
+
+<button id="upload-fab" class="hidden fixed bottom-24 right-6 z-30 btn-primary rounded-full w-14 h-14 !p-0 items-center justify-center">
+  <i data-lucide="plus" class="w-6 h-6"></i>
+</button>
+
+<div id="upload-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm items-center justify-center p-6">
+  <div class="glass-card max-w-lg w-full p-8">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-2xl font-bold">Upload Media</h3>
+      <button id="upload-close" class="p-2"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div id="drop-zone" class="border-2 border-dashed border-violet/40 rounded-xl p-10 text-center cursor-pointer hover:border-violet transition">
+      <i data-lucide="upload-cloud" class="w-10 h-10 mx-auto mb-3 text-violet"></i>
+      <p class="text-sharp/70 mb-2">Drag & drop media here</p>
+      <p class="text-sharp/40 text-sm">or</p>
+      <button type="button" id="file-btn" class="mt-3 btn-outline text-sm">Select File</button>
+      <input type="file" id="file-input" accept="image/*,video/*" class="hidden">
+      <p id="file-name" class="mt-3 text-sm text-cyan"></p>
+    </div>
+    <input id="caption-input" type="text" placeholder="Caption / Title" class="mt-4 w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-violet">
+    <button id="post-btn" class="btn-primary w-full mt-4 justify-center">Post to Gallery</button>
+  </div>
+</div>
+
+<div id="lightbox" class="hidden fixed inset-0 z-50 bg-black/95 items-center justify-center">
+  <button id="lb-close" class="absolute top-6 right-6 p-2 text-sharp"><i data-lucide="x" class="w-8 h-8"></i></button>
+  <button id="lb-prev" class="absolute left-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 rounded-full"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+  <button id="lb-next" class="absolute right-6 top-1/2 -translate-y-1/2 p-3 bg-white/10 rounded-full"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+  <div id="lb-content" class="max-w-6xl max-h-[90vh] p-6"></div>
+  <p id="lb-caption" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-sharp/80 font-mono text-sm"></p>
+</div>
+
+<section id="testimonials" class="py-32 px-6 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <div class="font-mono text-sm text-cyan mb-3">// TESTIMONIALS</div>
+      <h2 class="font-display text-5xl md:text-6xl font-bold">What Our Clients Say</h2>
+    </div>
+    <div id="testimonials-track" class="flex gap-6 overflow-x-auto pb-4 snap-x scroll-smooth"></div>
+  </div>
+</section>
+
+<section class="py-24 px-6">
+  <div class="max-w-5xl mx-auto cta-banner text-center rounded-3xl p-16">
+    <h2 class="font-display text-5xl md:text-6xl font-bold mb-4">Ready to Find Your Edge?</h2>
+    <p class="text-sharp/80 text-lg mb-8">Let's build something extraordinary together.</p>
+    <button onclick="document.getElementById('chat-bubble').click()" class="btn-white">Start Your Journey</button>
+  </div>
+</section>
+
+<section id="contact" class="py-32 px-6 relative">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16">
+    <div>
+      <div class="font-mono text-sm text-cyan mb-3">// CONTACT</div>
+      <h2 class="font-display text-5xl md:text-6xl font-bold mb-8">Let's <span class="gradient-text">Talk</span></h2>
+      <div class="space-y-5 text-lg">
+        <div class="flex items-center gap-4"><i data-lucide="mail" class="w-5 h-5 text-violet"></i><a href="mailto:hello@prismedge.com">hello@prismedge.com</a></div>
+        <div class="flex items-center gap-4"><i data-lucide="phone" class="w-5 h-5 text-cyan"></i><a href="https://wa.me/233000000000">+233 000 000 000</a></div>
+        <div class="flex items-center gap-4"><i data-lucide="map-pin" class="w-5 h-5 text-violet"></i>Accra, Ghana</div>
+      </div>
+      <div class="flex gap-3 mt-8">
+        <a href="#" class="social-icon"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+        <a href="#" class="social-icon"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+        <a href="#" class="social-icon"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+        <a href="#" class="social-icon"><i data-lucide="music" class="w-5 h-5"></i></a>
+      </div>
+    </div>
+    <form id="contact-form" class="glass-card p-8 space-y-4">
+      <label class="sr-only" for="contact-name">Your Name</label>
+      <input id="contact-name" type="text" name="name" placeholder="Your Name" required class="form-input">
+      <label class="sr-only" for="contact-email">Email Address</label>
+      <input id="contact-email" type="email" name="email" placeholder="Email Address" required class="form-input">
+      <label class="sr-only" for="contact-whatsapp">WhatsApp Number</label>
+      <input id="contact-whatsapp" type="tel" name="whatsapp" placeholder="WhatsApp Number" class="form-input">
+      <label class="sr-only" for="contact-need">What do you need?</label>
+      <select id="contact-need" name="need" required class="form-input">
+        <option value="">What do you need?</option>
+        <option>Website</option>
+        <option>Brand Scaling</option>
+        <option>Products</option>
+        <option>Consulting</option>
+        <option>Other</option>
+      </select>
+      <label class="sr-only" for="contact-message">Your Message</label>
+      <textarea id="contact-message" name="message" rows="4" placeholder="Your Message" required class="form-input"></textarea>
+      <button type="submit" class="btn-primary w-full justify-center">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<footer class="relative pt-20 pb-10 px-6 border-t border-white/5">
+  <div class="footer-gradient-line"></div>
+  <div class="max-w-7xl mx-auto text-center">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+        <path d="M14 3 L25 22 L3 22 Z" stroke="url(#fGrad)" stroke-width="1.8" fill="none"/>
+        <defs>
+          <linearGradient id="fGrad" x1="0" y1="0" x2="28" y2="28">
+            <stop offset="0%" stop-color="#7C3AED"/>
+            <stop offset="100%" stop-color="#00D4FF"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="font-display font-bold text-2xl">PRISM EDGE</span>
+    </div>
+    <p class="text-sharp/50 font-mono text-sm mb-8">Where Brands Break Through</p>
+    <div class="flex flex-wrap justify-center gap-6 mb-4 text-sm text-sharp/70">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#media">Media</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="flex justify-center gap-6 mb-8 text-sm">
+      <a href="https://prismlabs.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../prism-labs/index.html';}" class="text-violet">Prism Labs</a>
+      <a href="https://edgeproducts.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../edge-products/index.html';}" class="text-cyan">Edge Products</a>
+    </div>
+    <p class="text-sharp/40 text-xs">© 2025 Prism Edge. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<button id="chat-bubble" class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-violet/50 transition-all hover:scale-110" style="background: linear-gradient(135deg, #7C3AED, #00D4FF);">
+  <i data-lucide="message-circle" class="w-6 h-6 text-white"></i>
+</button>
+
+<div id="chat-panel" class="hidden fixed bottom-24 right-6 z-40 w-[90vw] max-w-sm h-[500px] flex-col glass-card overflow-hidden">
+  <div class="flex items-center justify-between p-4 border-b border-white/10">
+    <div>
+      <h4 class="font-display font-semibold">Chat with Prism Edge</h4>
+      <div class="flex items-center gap-2 text-xs text-sharp/60"><span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>Online</div>
+    </div>
+    <button id="chat-close" class="p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+  </div>
+  <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+  <div class="p-3 border-t border-white/10 flex gap-2">
+    <label class="sr-only" for="chat-input">Message Prism Edge</label>
+    <input id="chat-input" type="text" placeholder="Type a message..." class="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-violet">
+    <button id="chat-send" class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, #7C3AED, #00D4FF);"><i data-lucide="send" class="w-4 h-4"></i></button>
+  </div>
+</div>
+
+<div id="toast-container" class="fixed top-24 right-6 z-50 flex flex-col gap-3"></div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -25,7 +25,6 @@ function initApp() {
   initStories();
   initPrismaChat();
   initFooterAndCTAs();
-  initAdmin();
   initAnimations();
   initInteractiveLogo();
   // initCubeInteraction is handled inside initInteractiveLogo()

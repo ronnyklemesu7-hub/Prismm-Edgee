@@ -1,5 +1,5 @@
 // ─── PRISMA AI — Prism Labs Brand Strategy Chatbot ───────────────────────────
-const API_KEY = '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';
+
 const MAX_TURNS = 5;
 
 // Models to try in order (free tier)
@@ -16,16 +16,28 @@ let _prismaPatterns = { industries: {}, challenges: {} };
 
 async function loadPrismaMemory() {
   try {
-    const resSess = await fetch('/api/data/global_sessions');
-    if (resSess.ok) _prismaSessions = await resSess.json();
-    
-    const resPat = await fetch('/api/data/global_trends');
-    if (resPat.ok) {
-      const p = await resPat.json();
-      if (p && p.industries) _prismaPatterns = p;
+    const storedSessions = JSON.parse(
+      localStorage.getItem('prisma_sessions') || '[]'
+    );
+
+    const storedPatterns = JSON.parse(
+      localStorage.getItem('prisma_trends') || '{}'
+    );
+
+    _prismaSessions = Array.isArray(storedSessions)
+      ? storedSessions.slice(-20)
+      : [];
+
+    if (storedPatterns && typeof storedPatterns === 'object') {
+      _prismaPatterns = {
+        industries: storedPatterns.industries || {},
+        challenges: storedPatterns.challenges || {}
+      };
     }
   } catch (e) {
-    console.warn('[PRISMA] Memory load failed:', e);
+    console.warn('[PRISMA] Local memory load failed:', e);
+    _prismaSessions = [];
+    _prismaPatterns = { industries: {}, challenges: {} };
   }
 }
 
@@ -118,46 +130,50 @@ async function recordPrismaPattern(userText) {
     const t = userText.toLowerCase();
 
     const industryMap = {
-      'fashion / clothing':  ['cloth', 'fashion', 'wear', 'apparel', 'streetwear'],
-      'food & beverage':     ['food', 'restaurant', 'catering', 'drink', 'bake'],
-      'tech & software':     ['app', 'software', 'tech', 'saas', 'platform'],
+      'fashion / clothing': ['cloth', 'fashion', 'wear', 'apparel', 'streetwear'],
+      'food & beverage': ['food', 'restaurant', 'catering', 'drink', 'bake'],
+      'tech & software': ['app', 'software', 'tech', 'saas', 'platform'],
       'consulting & agency': ['consult', 'agency', 'freelance', 'service'],
-      'health & wellness':   ['health', 'fitness', 'wellness', 'gym', 'coach'],
-      'e-commerce':          ['store', 'shop', 'sell', 'product', 'ecommerce'],
-      'beauty & lifestyle':  ['beauty', 'salon', 'makeup', 'skin', 'lifestyle'],
-      'real estate':         ['property', 'real estate', 'housing', 'land'],
+      'health & wellness': ['health', 'fitness', 'wellness', 'gym', 'coach'],
+      'e-commerce': ['store', 'shop', 'sell', 'product', 'ecommerce'],
+      'beauty & lifestyle': ['beauty', 'salon', 'makeup', 'skin', 'lifestyle'],
+      'real estate': ['property', 'real estate', 'housing', 'land']
     };
+
     const challengeMap = {
-      'low online visibility':    ['not found', 'no traffic', 'no reach', 'invisible', 'no online'],
-      'poor conversion':          ['no sales', 'not converting', 'visitors but no', 'low sales'],
-      'no content strategy':      ['content', 'posting', 'social media', 'no strategy'],
-      'unclear target audience':  ['who to target', 'dont know my customer', 'broad audience'],
-      'weak brand identity':      ['no brand', 'logo', 'identity', 'inconsistent'],
-      'limited budget':           ['small budget', 'limited budget', 'low budget', 'cant afford'],
+      'low online visibility': ['not found', 'no traffic', 'no reach', 'invisible', 'no online'],
+      'poor conversion': ['no sales', 'not converting', 'visitors but no', 'low sales'],
+      'no content strategy': ['content', 'posting', 'social media', 'no strategy'],
+      'unclear target audience': ['who to target', 'dont know my customer', 'broad audience'],
+      'weak brand identity': ['no brand', 'logo', 'identity', 'inconsistent'],
+      'limited budget': ['small budget', 'limited budget', 'low budget', 'cant afford']
     };
 
     let changed = false;
+
     for (const [industry, words] of Object.entries(industryMap)) {
       if (words.some(w => t.includes(w))) {
-        _prismaPatterns.industries[industry] = (_prismaPatterns.industries[industry] || 0) + 1;
+        _prismaPatterns.industries[industry] =
+          (_prismaPatterns.industries[industry] || 0) + 1;
         changed = true;
       }
     }
+
     for (const [challenge, words] of Object.entries(challengeMap)) {
       if (words.some(w => t.includes(w))) {
-        _prismaPatterns.challenges[challenge] = (_prismaPatterns.challenges[challenge] || 0) + 1;
+        _prismaPatterns.challenges[challenge] =
+          (_prismaPatterns.challenges[challenge] || 0) + 1;
         changed = true;
       }
     }
-    
+
     if (changed) {
-      await fetch('/api/data/global_trends', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(_prismaPatterns)
-      });
+      localStorage.setItem(
+        'prisma_trends',
+        JSON.stringify(_prismaPatterns)
+      );
     }
-  } catch(e) {
+  } catch (e) {
     console.warn('[PRISMA] Pattern recording error:', e);
   }
 }
@@ -165,21 +181,35 @@ async function recordPrismaPattern(userText) {
 async function savePrismaSession(analysis) {
   try {
     const session = {
-      industry:      history.filter(m => m.role === 'user').map(m => m.content).join(' ').slice(0, 100),
-      keyChallenge:  (analysis.fix || [])[0] || 'General growth',
-      recommendation: analysis.recommendation || 'Brand Scaling',
-      ts:            Date.now()
+      industry: history
+        .filter(m => m.role === 'user')
+        .map(m => m.content)
+        .join(' ')
+        .slice(0, 100),
+
+      keyChallenge:
+        (analysis.fix || [])[0] || 'General growth',
+
+      recommendation:
+        analysis.recommendation || 'Brand Scaling',
+
+      ts: Date.now()
     };
-    
-    await fetch('/api/data/global_sessions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(session)
-    });
-    
+
     _prismaSessions.push(session);
-    if (_prismaSessions.length > 20) _prismaSessions.splice(0, _prismaSessions.length - 20);
-  } catch(e) {
+
+    if (_prismaSessions.length > 20) {
+      _prismaSessions.splice(
+        0,
+        _prismaSessions.length - 20
+      );
+    }
+
+    localStorage.setItem(
+      'prisma_sessions',
+      JSON.stringify(_prismaSessions)
+    );
+  } catch (e) {
     console.warn('[PRISMA] Session save error:', e);
   }
 }
@@ -209,65 +239,32 @@ function prismaOfflineReply(userMessage) {
 
 // ─── AI CALL WITH MODEL FALLBACK ─────────────────────────────────────────────
 async function callAI(userMessage) {
-  history.push({ role: 'user', content: userMessage });
+  history.push({
+    role: 'user',
+    content: userMessage
+  });
+
   recordPrismaPattern(userMessage);
 
-  const messages = [
-    { role: 'user', content: buildPrismaSystemPrompt() },
-    ...history
-  ];
+  /*
+   * Local-first mode.
+   *
+   * The production AI request will eventually go through
+   * a secure Vercel serverless endpoint instead of exposing
+   * an API key in browser JavaScript.
+   */
 
-  if (turnCount >= MAX_TURNS && !hasAnalyzed) {
-    messages.push({
-      role: 'user',
-      content: 'You now have enough context. You MUST output the brand analysis JSON wrapped in <ANALYSIS>...</ANALYSIS> tags in your next response. Do not ask more questions — deliver the analysis now.'
+  console.log('[PRISMA] Local AI mode');
+
+  const offline = prismaOfflineReply(userMessage);
+
+  if (offline) {
+    history.push({
+      role: 'assistant',
+      content: offline
     });
   }
 
-  const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-
-  // Try each model in order
-  for (const model of MODELS) {
-    try {
-      console.log('[PRISMA] Trying model:', model);
-      const res = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${API_KEY}`, 
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://prismedge.com',
-          'X-Title': 'Prism Edge Labs'
-        },
-        body: JSON.stringify({ 
-          model: model, 
-          messages: messages, 
-          temperature: 0.75, 
-          max_tokens: 800 
-        }),
-        signal: AbortSignal.timeout(15000)
-      });
-      
-      if (!res.ok) {
-        console.warn('[PRISMA] Model', model, 'returned status', res.status);
-        continue;
-      }
-      
-      const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content?.trim();
-      if (reply) {
-        console.log('[PRISMA] Success with model:', model);
-        history.push({ role: 'assistant', content: reply });
-        return reply;
-      }
-    } catch (e) {
-      console.warn('[PRISMA] Model', model, 'failed:', e.message);
-    }
-  }
-
-  // All models failed — use guided offline reply
-  console.warn('[PRISMA] All models failed, using offline fallback');
-  const offline = prismaOfflineReply(userMessage);
-  if (offline) history.push({ role: 'assistant', content: offline });
   return offline;
 }
 
@@ -277,14 +274,24 @@ function addMessage(text, sender) {
   if (!wrap || !text) return;
   const div = document.createElement('div');
   div.className = sender === 'ai' ? 'msg-ai' : 'msg-user';
-  // Strip analysis JSON from display
-  const cleaned = text.replace(/<ANALYSIS>[\s\S]*?<\/ANALYSIS>/g, '').trim();
-  
-  // Basic markdown-like parsing to support the new persona's formatting (bolding, lists)
-  let htmlText = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  htmlText = htmlText.replace(/\n/g, '<br>');
-  
-  div.innerHTML = htmlText || text;
+  const cleaned = String(text).replace(/<ANALYSIS>[\s\S]*?<\/ANALYSIS>/g, '').trim();
+
+  // Render a deliberately tiny markdown subset without injecting model text as HTML.
+  const lines = (cleaned || String(text)).split('\n');
+  lines.forEach((line, lineIndex) => {
+    const parts = line.split(/(\*\*[^*]+\*\*)/g);
+    parts.forEach(part => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        const strong = document.createElement('strong');
+        strong.textContent = part.slice(2, -2);
+        div.appendChild(strong);
+      } else {
+        div.appendChild(document.createTextNode(part));
+      }
+    });
+    if (lineIndex < lines.length - 1) div.appendChild(document.createElement('br'));
+  });
+
   wrap.appendChild(div);
   wrap.scrollTop = wrap.scrollHeight;
 }
@@ -316,22 +323,12 @@ function renderAnalysis(data) {
   const out = document.getElementById('analysis-output');
   if (!placeholder || !out) return;
 
-  if (typeof gsap !== 'undefined') {
-    gsap.to(placeholder, {
-      opacity: 0, duration: 0.5, onComplete: () => {
-        placeholder.classList.add('hidden');
-        out.classList.remove('hidden');
-        gsap.fromTo(out, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
-        buildChart(data);
-        buildLists(data);
-      }
-    });
-  } else {
-    placeholder.classList.add('hidden');
-    out.classList.remove('hidden');
-    buildChart(data);
-    buildLists(data);
-  }
+  placeholder.classList.add('hidden');
+  out.classList.remove('hidden');
+  out.classList.add('analysis-enter');
+  requestAnimationFrame(() => out.classList.add('is-visible'));
+  buildChart(data);
+  buildLists(data);
 }
 
 function buildChart(data) {
@@ -374,19 +371,43 @@ function buildLists(data) {
   const fixList = document.getElementById('fix-list');
   const roadmapList = document.getElementById('roadmap-list');
   
-  if (workingList) workingList.innerHTML = (data.working || []).map(w => `<li>• ${w}</li>`).join('');
-  if (fixList) fixList.innerHTML = (data.fix || []).map(w => `<li>• ${w}</li>`).join('');
+  const fillTextList = (node, items) => {
+    if (!node) return;
+    node.replaceChildren();
+    (Array.isArray(items) ? items : []).forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = `• ${String(item)}`;
+      node.appendChild(li);
+    });
+  };
+
+  fillTextList(workingList, data.working);
+  fillTextList(fixList, data.fix);
+
   if (roadmapList) {
-    roadmapList.innerHTML = (data.roadmap || []).map((r, i) => `
-      <li class="flex gap-3 analysis-item" style="opacity:0;transform:translateY(16px);">
-        <span class="w-6 h-6 rounded-full bg-prism-gold text-prism-black flex items-center justify-center text-xs font-bold flex-shrink-0">${i + 1}</span>
-        <div>
-          <p class="text-prism-gold text-sm">${r.step}</p>
-          <p class="text-prism-pearl/60 text-xs">${r.detail}</p>
-        </div>
-      </li>`).join('');
-    
-    // Animate items in
+    roadmapList.replaceChildren();
+    (Array.isArray(data.roadmap) ? data.roadmap : []).forEach((r, i) => {
+      const li = document.createElement('li');
+      li.className = 'flex gap-3 analysis-item';
+      li.style.opacity = '0';
+      li.style.transform = 'translateY(16px)';
+
+      const num = document.createElement('span');
+      num.className = 'w-6 h-6 rounded-full bg-prism-gold text-prism-black flex items-center justify-center text-xs font-bold flex-shrink-0';
+      num.textContent = String(i + 1);
+
+      const content = document.createElement('div');
+      const step = document.createElement('p');
+      step.className = 'text-prism-gold text-sm';
+      step.textContent = String(r?.step || 'Next step');
+      const detail = document.createElement('p');
+      detail.className = 'text-prism-pearl/60 text-xs';
+      detail.textContent = String(r?.detail || '');
+      content.append(step, detail);
+      li.append(num, content);
+      roadmapList.appendChild(li);
+    });
+
     setTimeout(() => {
       document.querySelectorAll('.analysis-item').forEach((el, i) => {
         setTimeout(() => {

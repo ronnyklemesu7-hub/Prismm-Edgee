@@ -4,8 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Prism Labs helps brands scale through high-performance websites, digital marketing, and AI-powered business consulting.">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta property="og:title" content="PRISM LABS — Built To Scale Brands">
+  <meta property="og:description" content="Website development, digital marketing, and AI-powered brand consulting from Prism Labs.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/prism-edge-logo.png">
   <title>PRISM EDGE — Built To Scale Brands</title>
-  <link rel="icon" type="image/jpeg" href="assets/prism-edge-logo.jpg">
+  <link rel="icon" type="image/png" href="assets/prism-edge-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -32,9 +38,7 @@
   </script>
   <link rel="stylesheet" href="css/styles.css" />
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="text-prism-pearl font-sans antialiased overflow-x-hidden">
@@ -42,7 +46,7 @@
   <nav class="fixed top-0 left-0 right-0 z-50 glass-nav">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <a href="#hero" class="flex items-center gap-3 group">
-        <img src="assets/prism-edge-logo.jpg" alt="PRISM EDGE Logo"
+        <img src="assets/prism-edge-logo.png" alt="PRISM EDGE Logo"
           class="w-10 h-10 object-contain mix-blend-screen group-hover:scale-110 transition-transform">
         <span class="font-serif text-2xl text-prism-gold tracking-wider">PRISM <span
             class="font-light">EDGE</span></span>
@@ -53,15 +57,10 @@
         <a href="#websites" class="hover:text-prism-gold transition">Websites</a>
         <a href="#marketing" class="hover:text-prism-gold transition">Marketing</a>
         <a href="#prisma" class="hover:text-prism-gold transition">PRISMA AI</a>
-        <a href="/" onclick="if(window.location.protocol==='file:'){event.preventDefault();window.location.href='../main site/index.html';}" class="hover:text-prism-gold transition">
-          MAIN SITE
-          <span
-            class="px-2 py-0.5 bg-prism-gold/10 text-[10px] text-prism-gold rounded-full border border-prism-gold/20">Parent</span>
-        </a>
-        <a href="/shop/" onclick="if(window.location.protocol==='file:'){event.preventDefault();window.location.href='../edge products/index.html';}"
-          class="hover:text-prism-gold transition">
-          EDGE PRODUCTS
-        </a>
+      </div>
+      <div class="hidden xl:flex items-center gap-3 ml-2 text-[11px] tracking-widest">
+        <a href="../main-site/index.html" class="text-prism-pearl/60 hover:text-prism-gold transition">PRISM EDGE</a>
+        <a href="https://edgeproducts.com" target="_blank" rel="noopener" onclick="if(location.hostname==='localhost' || location.protocol==='file:'){event.preventDefault();location.href='../edge-products/index.html';}" class="text-prism-pearl/60 hover:text-prism-gold transition">SHOP</a>
       </div>
       <a href="#prisma"
         class="hidden md:block px-5 py-2 border border-prism-gold/40 text-prism-gold rounded-full text-xs tracking-wider hover:bg-prism-gold hover:text-prism-black transition">CONSULT</a>
@@ -144,7 +143,7 @@
           <h3 class="font-serif text-2xl text-prism-gold mb-3">Website Development</h3>
           <p class="text-prism-pearl/70 text-sm leading-relaxed flex-1">High-performance digital experiences engineered
             around your brand and conversion goals.</p>
-          <a href="templates.html" target="_blank"
+          <a href="templates.html" target="_blank" rel="noopener noreferrer"
             class="btn-view-templates-trigger mt-8 inline-flex items-center gap-2 text-xs font-bold tracking-widest text-prism-black bg-prism-gold px-5 py-2.5 rounded-full hover:scale-105 transition-transform self-start">
             VIEW TEMPLATES <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -278,6 +277,7 @@
           <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
           <div class="p-4 border-t border-prism-gold/10">
             <form id="chat-form" class="flex gap-2">
+              <label for="chat-input" class="sr-only">Tell PRISMA about your business</label>
               <input id="chat-input" type="text" placeholder="Tell PRISMA about your business..."
                 class="flex-1 bg-prism-black/60 border border-prism-pearl/10 rounded-full px-5 py-3 text-sm focus:outline-none focus:border-prism-gold/60 transition" />
               <button type="submit"
@@ -336,7 +336,7 @@
       <div class="md:col-span-2">
         <div class="md:col-span-2">
           <div class="flex items-center gap-4 mb-4">
-            <img src="assets/prism-edge-logo.jpg" alt="Logo"
+            <img src="assets/prism-edge-logo.png" alt="Logo"
               class="w-12 h-12 object-contain mix-blend-screen">
             <h3 class="font-serif text-3xl text-prism-gold tracking-wider">PRISM EDGE</h3>
           </div>
@@ -352,16 +352,14 @@
           <li><a href="#websites" class="hover:text-prism-gold">Websites</a></li>
           <li><a href="#marketing" class="hover:text-prism-gold">Marketing</a></li>
           <li><a href="#prisma" class="hover:text-prism-gold">PRISMA AI</a></li>
-          <li><a href="/" target="_blank" class="hover:text-prism-gold font-medium mt-4 inline-block">← Back to Main
-              Site</a></li>
-          <li><a href="#" id="admin-login-link" class="hover:text-prism-gold mt-2 inline-block">Admin Portal</a></li>
+
         </ul>
       </div>
       <div>
         <p class="text-prism-gold tracking-widest text-xs mb-4">CONTACT</p>
         <ul class="space-y-2 text-sm text-prism-pearl/70">
           <li>
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=prismmedgee@gmail.com" target="_blank"
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=prismmedgee@gmail.com" target="_blank" rel="noopener noreferrer"
               class="hover:text-prism-gold flex items-center gap-2">
               <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -372,7 +370,7 @@
             </a>
           </li>
           <li>
-            <a href="https://wa.me/2330248607998" target="_blank" class="hover:text-prism-gold flex items-center gap-2">
+            <a href="https://wa.me/2330248607998" target="_blank" rel="noopener noreferrer" class="hover:text-prism-gold flex items-center gap-2">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path
@@ -384,7 +382,7 @@
           </li>
         </ul>
         <div class="flex gap-3 mt-5">
-          <a href="https://www.instagram.com/" target="_blank"
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
             class="w-9 h-9 rounded-full border border-prism-gold/20 flex items-center justify-center hover:border-prism-gold transition">
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -393,7 +391,7 @@
               <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
             </svg>
           </a>
-          <a href="https://web.facebook.com/" target="_blank"
+          <a href="https://web.facebook.com/" target="_blank" rel="noopener noreferrer"
             class="w-9 h-9 rounded-full border border-prism-gold/20 flex items-center justify-center hover:border-prism-gold transition">
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -412,8 +410,8 @@
   <div id="lightbox-root"></div>
   <div id="admin-root"></div>
 
-  <script src="../kqDJT8D/js/db.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/database.js"></script>
   <script src="js/cursor.js"></script>
   <script src="js/templates.js"></script>
   <script src="js/gallery.js"></script>
@@ -422,7 +420,6 @@
   <script src="js/hero.js"></script>
   <script src="js/interactive_logo.js"></script>
   <script src="js/stories.js"></script>
-  <script src="js/admin.js"></script>
   <script src="js/main.js"></script>
 </body>
 

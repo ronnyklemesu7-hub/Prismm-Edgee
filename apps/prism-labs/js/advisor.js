@@ -2,7 +2,6 @@
 // Personality: ScaleIQ — Elite business advisor for founders, operators, leaders
 // Uses OpenRouter AI with full conversation history + learns from past consultations
 
-const ADVISOR_API_KEY = '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';
 const ADVISOR_MODEL = 'deepseek/deepseek-chat-v3-0324:free';
 
 // ─── LEARNED CONTEXT ─────────────────────────────────────────────────────────
@@ -39,7 +38,7 @@ Personality:
 
 YOUR EXPERTISE:
 - Revenue growth and pricing strategy
-- Operational efficiency and bottleneck removal  
+- Operational efficiency and bottleneck removal
 - Go-to-market and marketing strategy
 - Hiring decisions and org structure
 - Fundraising readiness and investor narrative
@@ -117,7 +116,7 @@ function smartAdvisorOfflineReply(userMessage) {
 async function callAdvisorAI(userMessage) {
     advisorHistory.push({ role: 'user', content: userMessage });
 
-    const apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
+    const apiUrl = null; // Local-first build: AI will use the secure Vercel backend later.
     const proxies = [
         'https://edge.flowith.io/api-proxy/' + encodeURIComponent(apiUrl),
         'https://corsproxy.io/?' + encodeURIComponent(apiUrl),
@@ -136,9 +135,10 @@ async function callAdvisorAI(userMessage) {
 
     for (const url of proxies) {
         try {
+            if (!apiUrl) throw new Error('Legacy AI module disabled in local-first build');
             const res = await fetch(url, {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${ADVISOR_API_KEY}`, 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body,
                 signal: AbortSignal.timeout(12000)
             });

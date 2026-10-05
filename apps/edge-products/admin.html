@@ -552,7 +552,6 @@
   <div id="toast-container"></div>
 
   <script>
-    let API = '/api/data';
     const shopSyncChannel = new BroadcastChannel('prism_shop_sync');
 
     function notifyShopUpdate() {
@@ -692,76 +691,53 @@
       setTimeout(() => toast.remove(), 3000);
     }
 
-    // Storage API Helpers (IndexedDB + API + LocalStorage)
+    // Local Storage Helpers (IndexedDB + LocalStorage)
     async function fetchAdminItems(storeName) {
-      // 1. Server API
-      try {
-        let res = await fetch(`${API}/${storeName}`).catch(() => null);
-        if (!res || !res.ok) {
-          res = await fetch(`http://localhost:8000/api/data/${storeName}`).catch(() => null);
-        }
-        if (res && res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            for (const it of data) {
-              if (it && it.id) await idbSave(storeName, it);
-            }
-          }
-        }
-      } catch (_) {}
-
-      // 2. IndexedDB (Primary Truth)
+      // IndexedDB is the primary source of truth.
       const items = await idbGetAll(storeName);
       if (items && items.length > 0) return items;
 
-      // 3. LocalStorage
+      // LocalStorage fallback for small data stores.
       if (storeName !== 'products' && storeName !== 'storefrontMedia') {
         try {
           return JSON.parse(localStorage.getItem(storeName) || '[]');
         } catch (_) {}
       }
+
       return [];
     }
 
     async function saveAdminItem(storeName, item) {
-      // 1. IndexedDB (Supports unlimited storage, zero 5MB limits)
-      await idbSave(storeName, item);
+      if (!item) return false;
 
-      // 2. LocalStorage (SKIP for large media stores)
+      if (!item.id) {
+        item.id = `${storeName}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      }
+
+      // IndexedDB is the primary storage.
+      const saved = await idbSave(storeName, item);
+
+      // Mirror small records to LocalStorage.
       if (storeName !== 'products' && storeName !== 'storefrontMedia') {
         try {
           let items = JSON.parse(localStorage.getItem(storeName) || '[]');
           const idx = items.findIndex(it => String(it.id) === String(item.id));
-          if (idx !== -1) items[idx] = item; else items.push(item);
+
+          if (idx !== -1) items[idx] = item;
+          else items.push(item);
+
           localStorage.setItem(storeName, JSON.stringify(items));
         } catch (_) {}
       }
 
-      // 3. Server API
-      try {
-        let res = await fetch(`${API}/${storeName}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(item)
-        }).catch(() => null);
-
-        if (!res || !res.ok) {
-          await fetch(`http://localhost:8000/api/data/${storeName}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(item)
-          }).catch(() => null);
-        }
-      } catch (_) {}
-
-      return true;
+      notifyShopUpdate();
+      return saved;
     }
 
     async function deleteAdminItem(storeName, id) {
-      // 1. IndexedDB
-      await idbDelete(storeName, id);
+      const deleted = await idbDelete(storeName, id);
 
-      // 2. LocalStorage (SKIP for large media stores)
+      // Mirror deletion to LocalStorage.
       if (storeName !== 'products' && storeName !== 'storefrontMedia') {
         try {
           let items = JSON.parse(localStorage.getItem(storeName) || '[]');
@@ -770,11 +746,8 @@
         } catch (_) {}
       }
 
-      // 3. Server API
-      try {
-        await fetch(`${API}/${storeName}/${id}`, { method: 'DELETE' }).catch(() => null);
-        await fetch(`http://localhost:8000/api/data/${storeName}/${id}`, { method: 'DELETE' }).catch(() => null);
-      } catch (_) {}
+      notifyShopUpdate();
+      return deleted;
     }
 
     function compressImageFile(file, maxWidth = 800, maxHeight = 800, quality = 0.75) {
